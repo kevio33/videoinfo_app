@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Register.RegisterActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="329dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/login"
+        />
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:cardBackgroundColor="@color/white"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="250dp"
+        app:cardCornerRadius="15dp"
+        app:contentPaddingLeft="50dp"
+        app:contentPaddingRight="50dp"
+        app:contentPaddingTop="50dp"
+        android:layout_alignParentBottom="true"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/account"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/img_regisuseracoount"
+                />
+
+            <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/regis_edit"
+                android:textSize="20sp"
+                android:hint="@string/login_username"
+                android:textColorHint="@color/Gainsboro"
+                android:paddingStart="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_toRightOf="@+id/img_regisuseracoount"
+                android:theme="@style/MyEditText"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="40dp"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/pwd"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/img_regispwd"
+
+                />
+
+            <EditText
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/regis_pwdedit"
+                android:textSize="20sp"
+                android:hint="@string/login_pwd"
+                android:textColorHint="@color/Gainsboro"
+                android:paddingStart="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_toRightOf="@+id/img_regispwd"
+                android:theme="@style/MyEditText"
+                />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        android:textSize="25sp"
+        android:background="@drawable/login_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/regis_btn"
+        />
+
+</RelativeLayout>
