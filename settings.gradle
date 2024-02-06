@@ -25,5 +25,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "VideoInfo"
+rootProject.name = "videoInfo"
 include ':app'
