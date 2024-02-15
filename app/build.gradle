@@ -46,4 +46,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
+    implementation 'io.github.h07000223:flycoTabLayout:3.0.0'
 }

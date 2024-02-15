@@ -1,4 +1,4 @@
-package com.kevin.videoinfo.Register;
+package com.kevin.videoinfo.Activitys.Register;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,14 +8,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.kevin.videoinfo.DBhelper.DBOpenHelper;
-import com.kevin.videoinfo.Login.LoginActivity;
-import com.kevin.videoinfo.MainActivity;
-import com.kevin.videoinfo.R;
+import com.kevin.videoinfo.Activitys.Login.LoginActivity;
 import com.kevin.videoinfo.Utils.UserInfoVlidate;
 import com.kevin.videoinfo.databinding.ActivityRegisterBinding;
 

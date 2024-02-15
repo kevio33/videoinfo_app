@@ -5,10 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
-import com.kevin.videoinfo.Login.LoginActivity;
-import com.kevin.videoinfo.Register.RegisterActivity;
+import com.kevin.videoinfo.Activitys.Login.LoginActivity;
+import com.kevin.videoinfo.Activitys.Register.RegisterActivity;
 import com.kevin.videoinfo.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {

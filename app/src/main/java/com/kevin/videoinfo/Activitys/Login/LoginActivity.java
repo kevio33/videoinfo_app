@@ -1,9 +1,10 @@
-package com.kevin.videoinfo.Login;
+package com.kevin.videoinfo.Activitys.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.kevin.videoinfo.Activitys.Home.HomePageActivity;
 import com.kevin.videoinfo.DBhelper.DBOpenHelper;
 import com.kevin.videoinfo.R;
 import com.kevin.videoinfo.Utils.ConfigUtils;
@@ -77,6 +79,8 @@ public class LoginActivity extends AppCompatActivity {
                     cursor.close();
                     if(!id.equals("-1")){
                         Toast.makeText(getApplicationContext(),"登录成功",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                        startActivity(intent);
                     }else{
                         Toast.makeText(getApplicationContext(),"用户信息错误",Toast.LENGTH_SHORT).show();
                     }
