@@ -5,5 +5,7 @@
     <string name="login_username">用户名</string>
     <string name="login_pwd">密码</string>
     <string name="homeFrag">homeFrag</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

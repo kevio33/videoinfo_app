@@ -52,9 +52,11 @@ public class HomePageActivity extends AppCompatActivity {
         }
         activityHomePageBinding.tl2.setTabData(mTabEntities);
         activityHomePageBinding.vp2.setAdapter(new MyPagerAdapter(getSupportFragmentManager(),mFragments,mTitles));
+
         setTabClick();
     }
 
+    //设置tab的点击事件，当点击对应tab时候跳转viewpage
     private void setTabClick(){
         activityHomePageBinding.tl2.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -70,7 +72,7 @@ public class HomePageActivity extends AppCompatActivity {
                 }
             }
         });
-
+        activityHomePageBinding.vp2.setOffscreenPageLimit(mFragments.size());//防止因frags过多，往回拉的时候导致的闪退问题
         activityHomePageBinding.vp2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

@@ -55,7 +55,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_toRightOf="@+id/img_useracoount"
                     android:theme="@style/MyEditText"
-                    android:text="yht"
+                    android:text="13612345678"
                     />
 
             </RelativeLayout>
@@ -88,7 +88,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_toRightOf="@+id/img_pwd"
                     android:theme="@style/MyEditText"
-                    android:text="123"
+                    android:text="admin"
                     />
 
             </RelativeLayout>

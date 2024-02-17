@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,12 +14,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.kevin.videoinfo.Activitys.Home.HomePageActivity;
 import com.kevin.videoinfo.DBhelper.DBOpenHelper;
 import com.kevin.videoinfo.R;
 import com.kevin.videoinfo.Utils.ConfigUtils;
+import com.kevin.videoinfo.Utils.HttpRequest;
+import com.kevin.videoinfo.Utils.ToastUtil;
+import com.kevin.videoinfo.Utils.TtitCallback;
 import com.kevin.videoinfo.Utils.UserInfoVlidate;
 import com.kevin.videoinfo.databinding.ActivityLoginBinding;
+import com.kevin.videoinfo.entity.LoginResponse;
 
 import org.json.JSONObject;
 
@@ -41,22 +48,26 @@ public class LoginActivity extends AppCompatActivity {
     private DBOpenHelper dbOpenHelper;
     private SQLiteDatabase sqLiteDatabase;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         activityLoginBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(activityLoginBinding.getRoot());
-        dbOpenHelper = DBOpenHelper.getDBOpenHelper(getApplicationContext(),"user.db",null,1);
+//        dbOpenHelper = DBOpenHelper.getDBOpenHelper(getApplicationContext(),"user.db",null,1);
+//
+//        sqLiteDatabase = dbOpenHelper.getReadableDatabase();
 
-        sqLiteDatabase = dbOpenHelper.getReadableDatabase();
+        context = this;
         Click();
     }
 
 
     private void Click(){
         activityLoginBinding.loginBtn.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("Range")
+//            @SuppressLint("Range")
             @Override
             public void onClick(View v) {
                 String username = activityLoginBinding.loginEdit.getText().toString().trim();
@@ -65,60 +76,58 @@ public class LoginActivity extends AppCompatActivity {
                 boolean isVal = UserInfoVlidate.isValidate(getApplicationContext(),username,pwd);//验证输入的合法性
 
                 if(isVal){
+                    //使用sqllite本地存储用户信息
                     //因为没有后台服务器，所有使用sqllite实现
                     //创建游标对象
-                    Cursor cursor = sqLiteDatabase.query("user", new String[]{"id","username"}, "username=? and password =?", new String[]{username,pwd}, null, null, null);
-                    //利用游标遍历所有数据对象
-                    String id = "-1";
-                    while(cursor.moveToNext()){
-                        id = cursor.getString(cursor.getColumnIndex("id"));
-                        @SuppressLint("Range") String useracoount = cursor.getString(cursor.getColumnIndex("username"));
-                        Log.i("Loginactivity","result: id="  + id +" username: " + useracoount );
-                    }
-                    // 关闭游标，释放资源
-                    cursor.close();
-                    if(!id.equals("-1")){
-                        Toast.makeText(getApplicationContext(),"登录成功",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                        startActivity(intent);
-                    }else{
-                        Toast.makeText(getApplicationContext(),"用户信息错误",Toast.LENGTH_SHORT).show();
-                    }
+//                    Cursor cursor = sqLiteDatabase.query("user", new String[]{"id","username"}, "username=? and password =?", new String[]{username,pwd}, null, null, null);
+//                    //利用游标遍历所有数据对象
+//                    String id = "-1";
+//                    while(cursor.moveToNext()){
+//                        id = cursor.getString(cursor.getColumnIndex("id"));
+//                        @SuppressLint("Range") String useracoount = cursor.getString(cursor.getColumnIndex("username"));
+//                        Log.i("Loginactivity","result: id="  + id +" username: " + useracoount );
+//                    }
+//                    // 关闭游标，释放资源
+//                    cursor.close();
+//                    if(!id.equals("-1")){
+//                        Toast.makeText(getApplicationContext(),"登录成功",Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+//                        startActivity(intent);
+//                    }else{
+//                        Toast.makeText(getApplicationContext(),"用户信息错误",Toast.LENGTH_SHORT).show();
+//                    }
+                    /**
+                     * 使用封装的okhttp请求数据
+                     */
+                    HashMap<String, Object> params = new HashMap<String, Object>();
+                    params.put("mobile", username);
+                    params.put("password", pwd);
+                    HttpRequest.config(ConfigUtils.LOGIN,params).postRequest(context, new TtitCallback() {
+                        @Override
+                        public void onSuccess(String res) {
+                            Gson gson = new Gson();
+                            LoginResponse loginResponse = gson.fromJson(res, LoginResponse.class);
+                            if (loginResponse.getCode() == 0) {
+                                String token = loginResponse.getToken();
+                                insertVal("token", token);//保存token，他这里是一个设备一个token
+                                Intent intent = new Intent(context, HomePageActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            } else {
+                            }
+                        }
 
+                        @Override
+                        public void onFailure(Exception e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.showToast(context,"未查询到用户");
+                                }
+                            });
 
-                    //发起请求
-//                    OkHttpClient okHttp = new OkHttpClient.Builder().build();
-//                    Map m = new HashMap();
-//                    m.put("mobile",username);
-//                    m.put("password",pwd);
-//                    JSONObject jsonObject = new JSONObject(m);
-//                    String jsonStr = jsonObject.toString();
-//                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"),
-//                            jsonStr);
-//                    Request request = new Request.Builder()
-//                            .url(ConfigUtils.BASE_URL+"app/login")
-//                            .addHeader("contentType","application/json;charset=utf-8")
-//                            .post(requestBody)
-//                            .build();
-//
-//                    final Call call = okHttp.newCall(request);
-//                    call.enqueue(new Callback() {
-//                        @Override
-//                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-//                            Log.e("onFailure", Objects.requireNonNull(e.getMessage()));
-//                        }
-//
-//                        @Override
-//                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-//                            final String result = response.body().string();
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    Toast.makeText(getApplicationContext(),result,Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
-//                        }
-//                    });
+                        }
+                    });
 
 
                 }
@@ -126,18 +135,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //验证输入的合法性
-//    private boolean isValidate(String username, String pwd) {
-//
-//        if(username ==null || username.length()==0){
-//            Toast.makeText(getApplicationContext(),"请输入用户名",Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
-//        if(pwd ==null || pwd.length() ==0){
-//            Toast.makeText(getApplicationContext(),"请输入密码",Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
-//
-//        return true;
-//    }
+    //保存返回的token，保存到sharedpreference
+    protected void insertVal(String key, String val) {
+        SharedPreferences sp = getSharedPreferences("sp_ttit", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, val);
+        editor.commit();
+    }
+
 }
