@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,8 +86,10 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         for (String title : mTitles) {
-            mFragments.add(VideoFragment.newInstance(title));
+            mFragments.add(VideoFragment.newInstance(title));//每一个tab对应一个VideoFrag
         }
+
+        Log.e("HomeFrag","加载完VideoFrag"+mFragments.size());
 
         viewPager.setOffscreenPageLimit(mFragments.size());//预加载，不用切换的时候销毁frags
         viewPager.setAdapter(new HomeFragPageAdapter(getFragmentManager(),mFragments,mTitles));

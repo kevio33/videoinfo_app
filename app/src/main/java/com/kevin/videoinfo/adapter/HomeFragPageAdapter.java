@@ -8,9 +8,12 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
+/**
+ * 顶部SlidingBar的adpter
+ */
 public class HomeFragPageAdapter extends FragmentPagerAdapter {
 
-    private ArrayList<Fragment> mFragments = new ArrayList<>();
+    private ArrayList<Fragment> mFragments;
     private  String[] mTitles;
     public HomeFragPageAdapter(@NonNull FragmentManager fm, ArrayList<Fragment> mFragments, String[] mTitles) {
         super(fm);
