@@ -23,7 +23,13 @@
                 android:id="@+id/img_header"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:src="@mipmap/header" />
+                android:src="@mipmap/korda"
+                />
+
+<!--            <com.kevin.videoinfo.view.MyImageView-->
+<!--                android:layout_width="42dp"-->
+<!--                android:layout_height="42dp"-->
+<!--                android:src="@mipmap/korda"/>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -62,7 +68,15 @@
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.dueeeke.videocontroller.component.PrepareView
+<!--            <com.dueeeke.videocontroller.component.PrepareView-->
+<!--                android:id="@+id/prepare_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" />-->
+<!--            <xyz.doikki.videoplayer.player.VideoView-->
+<!--                android:id="@+id/prepare_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" />-->
+            <xyz.doikki.videocontroller.component.PrepareView
                 android:id="@+id/prepare_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
