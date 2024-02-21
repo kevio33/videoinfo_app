@@ -1,5 +1,9 @@
 package com.kevin.videoinfo.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,11 +17,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flyco.tablayout.SlidingTabLayout;
+import com.google.gson.Gson;
 import com.kevin.videoinfo.R;
+import com.kevin.videoinfo.Utils.ConfigUtils;
+import com.kevin.videoinfo.Utils.HttpRequest;
+import com.kevin.videoinfo.Utils.StringUtils;
+import com.kevin.videoinfo.Utils.ToastUtil;
+import com.kevin.videoinfo.Utils.TtitCallback;
 import com.kevin.videoinfo.adapter.HomeFragPageAdapter;
 import com.kevin.videoinfo.adapter.MyPagerAdapter;
+import com.kevin.videoinfo.entity.CategoryEntity;
+import com.kevin.videoinfo.entity.VideoCategoryResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,10 +52,7 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     private ArrayList<Fragment> mFragments = new ArrayList<>();
-    private final String[] mTitles = {
-            "热门", "iOS", "Android"
-            , "前端", "后端", "设计", "工具资源"
-    };
+    private  String[] mTitles;
     private ViewPager viewPager;
     private SlidingTabLayout slidingTabLayout;
 
@@ -85,14 +96,63 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        for (String title : mTitles) {
-            mFragments.add(VideoFragment.newInstance(title));//每一个tab对应一个VideoFrag
+        getVideoCategory();
+    }
+
+    /**
+     * 请求视频标签
+     */
+    public void getVideoCategory(){
+        SharedPreferences sp = getActivity().getSharedPreferences("sp_ttit", MODE_PRIVATE);
+        String token = sp.getString("token", "");
+
+        if (!StringUtils.isEmpty(token)){
+            HashMap<String,Object> params = new HashMap<>();
+            params.put("token",token);
+            Log.i("HomeFrag",token);
+            HttpRequest.config(ConfigUtils.VIDEO_CATEGORY_LIST,params).getRequest(getActivity(), new TtitCallback() {
+                @Override
+                public void onSuccess(String res) {
+
+                    //TODO:更新主线程使用Handler
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            VideoCategoryResponse response = new Gson().fromJson(res,VideoCategoryResponse.class);
+                            if(response!=null && response.getCode() == 0){
+                                Log.i("HomeFrag","请求成功:"+res);
+                                List<CategoryEntity> list = response.getPage().getList();
+                                if (list!=null && !list.isEmpty()){
+                                    mTitles = new String[list.size()];
+                                    for(int i = 0;i<list.size();i++){
+                                        mTitles[i] = list.get(i).getCategoryName();//将类别赋值给字符串数组
+                                        mFragments.add(VideoFragment.newInstance(list.get(i).getCategoryId()));//每一个tab对应的category
+                                    }
+                                    viewPager.setOffscreenPageLimit(mFragments.size());//预加载，不用切换的时候销毁frags
+                                    viewPager.setAdapter(new HomeFragPageAdapter(getFragmentManager(),mFragments,mTitles));
+                                    slidingTabLayout.setViewPager(viewPager);
+                                }
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(getActivity(),"请求视频标签失败，请重试");
+                        }
+                    });
+                }
+            });
         }
 
-        Log.e("HomeFrag","加载完VideoFrag"+mFragments.size());
 
-        viewPager.setOffscreenPageLimit(mFragments.size());//预加载，不用切换的时候销毁frags
-        viewPager.setAdapter(new HomeFragPageAdapter(getFragmentManager(),mFragments,mTitles));
-        slidingTabLayout.setViewPager(viewPager);
     }
+
+
+
+
 }

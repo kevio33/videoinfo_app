@@ -73,6 +73,8 @@ public class VideoFragment extends Fragment implements OnItemChildClickListener 
 
     private String title;
 
+    private int categoryId;
+
 //    private FragmentVideoBinding fragmentVideoBinding;
 
 
@@ -112,14 +114,13 @@ public class VideoFragment extends Fragment implements OnItemChildClickListener 
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
      * @return A new instance of fragment VideoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static VideoFragment newInstance(String param1) {
+    public static VideoFragment newInstance(int categoryId) {
         VideoFragment fragment = new VideoFragment();
 
-        fragment.title = param1;
+        fragment.categoryId = categoryId;//通过categoryid加载不同类别视频
         return fragment;
     }
 
@@ -214,10 +215,12 @@ public class VideoFragment extends Fragment implements OnItemChildClickListener 
         params.put("token",token);
         params.put("page",pageNum);
         params.put("limit",5);
-        HttpRequest.config(ConfigUtils.VIDEO_LIST_ALL,params).getRequest(getActivity(), new TtitCallback() {
+        params.put("categoryId",categoryId);//视频标签
+        HttpRequest.config(ConfigUtils.VIDEO_LIST_BY_CATEGORY,params).getRequest(getActivity(), new TtitCallback() {
 
             @Override
             public void onSuccess(String res) {
+                //TODO:主线程更新换为handler
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
