@@ -1,5 +1,8 @@
 package com.kevin.videoinfo.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,14 +15,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.kevin.videoinfo.R;
+import com.kevin.videoinfo.Utils.ConfigUtils;
+import com.kevin.videoinfo.Utils.HttpRequest;
+import com.kevin.videoinfo.Utils.ToastUtil;
+import com.kevin.videoinfo.Utils.TtitCallback;
 import com.kevin.videoinfo.adapter.NewsAdapter;
 import com.kevin.videoinfo.entity.NewsEntity;
+import com.kevin.videoinfo.entity.NewsListResponse;
+import com.kevin.videoinfo.entity.VideoListResponse;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,6 +62,9 @@ public class NewsFragment extends Fragment {
     private NewsAdapter newsAdapter;
 
     protected LinearLayoutManager mLinearLayoutManager;
+
+    private int pageNum = 1;
+
 
     /**
      * Use this factory method to create a new instance of
@@ -101,105 +118,100 @@ public class NewsFragment extends Fragment {
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLinearLayoutManager);
         newsAdapter= new NewsAdapter(getActivity());
-//        newsAdapter.setOnItemChildClickListener(this);
+        newsAdapter.setOnItemClickListener(new NewsAdapter.OnItemClickLis() {
+            @Override
+            public void onClick(Serializable obj) {
+                ToastUtil.showToast(getActivity(),"没有vue界面，所有没写跳转");
+            }
+        });
 
-        for(int i = 0;i<15;i++){
-            int type = i% 3;
-            NewsEntity news = new NewsEntity();
-            news.setType(type);
-            datas.add(news);
-        }
 
         newsAdapter.setNewsEntityList(datas);
         recyclerView.setAdapter(newsAdapter);
 
-//        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-//            @Override
-//            public void onRefresh(RefreshLayout refreshlayout) {
-////                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
-////                pageNum = 1;
-//                getNewsOnInternet(true);//进行上拉刷新
-//
-//            }
-//        });
-//        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-//            @Override
-//            public void onLoadMore(RefreshLayout refreshlayout) {
-////                refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
-////                pageNum++;
-//                getNewsOnInternet(false);//下拉更新
-//            }
-//        });
-//        getNewsOnInternet(true);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                pageNum = 1;
+                getNewsOnInternet(true);//进行上拉刷新
+
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshlayout) {
+                pageNum++;
+                getNewsOnInternet(false);//下拉更新
+            }
+        });
+        getNewsOnInternet(true);
     }
-//    private void getNewsOnInternet(boolean isFresh){
-//        SharedPreferences sp = getActivity().getSharedPreferences("sp_ttit", MODE_PRIVATE);
-//        String token = sp.getString("token", "");
-//        HashMap<String,Object> params = new HashMap<>();
-//        params.put("token",token);
-////        params.put("page",pageNum);
-////        params.put("limit",5);
-////        params.put("categoryId",categoryId);//视频标签
-//        HttpRequest.config(ConfigUtils.VIDEO_LIST_BY_CATEGORY,params).getRequest(getActivity(), new TtitCallback() {
-//
-//            @Override
-//            public void onSuccess(String res) {
-//                //TODO:主线程更新换为handler
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        VideoListResponse response = new Gson().fromJson(res,VideoListResponse.class);
-//                        if(response!=null && response.getCode()==0){
-//                            List<VideoEntity> list = response.getPage().getList();
-//
-//                            if(list!=null && !list.isEmpty()){
-//                                if(isFresh){
-//                                    //上拉刷新
-//                                    refreshLayout.finishRefresh(true);
-//                                    datas = list;
-//                                }else{
-//                                    //下拉更新
-//                                    refreshLayout.finishLoadMore(true);
-//                                    datas.addAll(list);
-//                                }
-//
-//                                videoFragAdapter.setVideoEntityList(datas);
-//                                videoFragAdapter.notifyDataSetChanged();
-//                            }else{
-//                                //暂时新没有数据
-//                                if(isFresh){
-//                                    //上拉刷新
-//                                    refreshLayout.finishRefresh(true);
-//                                }else{
-//                                    //下拉更新
-//                                    refreshLayout.finishLoadMore(true);
-//                                }
-//                                ToastUtil.showToast(getActivity(),"暂无更多数据");
-//                            }
-//
-//                        }
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onFailure(Exception e) {
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if(isFresh){
-//                            //上拉刷新
-//                            refreshLayout.finishRefresh(true);
-//                        }else{
-//                            //下拉更新
-//                            refreshLayout.finishLoadMore(true);
-//                        }
-//                    }
-//                });
-//
-//            }
-//        });
-//    }
+    private void getNewsOnInternet(boolean isFresh){
+        SharedPreferences sp = getActivity().getSharedPreferences("sp_ttit", MODE_PRIVATE);
+        String token = sp.getString("token", "");
+        HashMap<String,Object> params = new HashMap<>();
+        params.put("page", pageNum);
+        params.put("limit", 5);
+        HttpRequest.config(ConfigUtils.NEWS_LIST,params).getRequest(getActivity(), new TtitCallback() {
+
+            @Override
+            public void onSuccess(String res) {
+                //TODO:主线程更新换为handler
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NewsListResponse response = new Gson().fromJson(res,NewsListResponse.class);
+                        if(response!=null && response.getCode()==0){
+                            List<NewsEntity> list = response.getPage().getList();
+
+                            if(list!=null && !list.isEmpty()){
+                                if(isFresh){
+                                    //上拉刷新
+                                    refreshLayout.finishRefresh(true);
+                                    datas = list;
+                                }else{
+                                    //下拉更新
+                                    refreshLayout.finishLoadMore(true);
+                                    datas.addAll(list);
+                                }
+
+                                newsAdapter.setNewsEntityList(datas);
+                                newsAdapter.notifyDataSetChanged();
+                            }else{
+                                //暂时新没有数据
+                                if(isFresh){
+                                    //上拉刷新
+                                    refreshLayout.finishRefresh(true);
+                                }else{
+                                    //下拉更新
+                                    refreshLayout.finishLoadMore(true);
+                                }
+                                ToastUtil.showToast(getActivity(),"暂无更多数据");
+                            }
+
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(isFresh){
+                            //上拉刷新
+                            refreshLayout.finishRefresh(true);
+                        }else{
+                            //下拉更新
+                            refreshLayout.finishLoadMore(true);
+                        }
+                    }
+                });
+
+            }
+        });
+    }
 
 
 }
