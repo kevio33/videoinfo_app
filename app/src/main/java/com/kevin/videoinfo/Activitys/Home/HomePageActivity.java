@@ -15,6 +15,7 @@ import com.kevin.videoinfo.entity.TabEntity;
 import com.kevin.videoinfo.fragments.CollectFragment;
 import com.kevin.videoinfo.fragments.HomeFragment;
 import com.kevin.videoinfo.fragments.MyFragment;
+import com.kevin.videoinfo.fragments.NewsFragment;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,7 +23,7 @@ import java.util.Random;
 public class HomePageActivity extends AppCompatActivity {
 
     //commonTabLayout的图标配置
-    private String[] mTitles = {"首页", "收藏","我的"};
+    private String[] mTitles = {"首页", "咨询","我的"};
     private int[] mIconUnselectIds = {
             R.mipmap.home_unselect, R.mipmap.collect_unselect,
             R.mipmap.my_unselect};
@@ -45,7 +46,7 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(activityHomePageBinding.getRoot());
 
         mFragments.add(HomeFragment.newInstance());
-        mFragments.add(CollectFragment.newInstance());
+        mFragments.add(NewsFragment.newInstance());
         mFragments.add(MyFragment.newInstance());
         for (int i = 0; i < mTitles.length; i++) {
             mTabEntities.add(new TabEntity(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));

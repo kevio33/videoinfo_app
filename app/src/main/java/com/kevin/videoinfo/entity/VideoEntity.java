@@ -30,7 +30,7 @@ public class VideoEntity implements Serializable {
     private String updateTime;
     private int categoryId;
     private String categoryName;
-    private VideoSocialEntity videoSocialEntity;
+//    private VideoSocialEntity videoSocialEntity;
 
     public int getVid() {
         return vid;
@@ -112,49 +112,49 @@ public class VideoEntity implements Serializable {
         this.categoryName = categoryName;
     }
 
-    public VideoSocialEntity getVideoSocialEntity() {
-        return videoSocialEntity;
-    }
+//    public VideoSocialEntity getVideoSocialEntity() {
+//        return videoSocialEntity;
+//    }
+//
+//    public void setVideoSocialEntity(VideoSocialEntity videoSocialEntity) {
+//        this.videoSocialEntity = videoSocialEntity;
+//    }
 
-    public void setVideoSocialEntity(VideoSocialEntity videoSocialEntity) {
-        this.videoSocialEntity = videoSocialEntity;
-    }
-
-    public static class VideoSocialEntity {
+//    public static class VideoSocialEntity {
         /**
          * commentnum : 103
          * likenum : 121
          * collectnum : 220
          */
 
-        private int commentnum;
-        private int likenum;
-        private int collectnum;
+        private int collectNum;
+        private int likeNum;
+        private int commentNum;
         private boolean flagLike;
         private boolean flagCollect;
 
-        public int getCommentnum() {
-            return commentnum;
+        public int getCommentNum() {
+            return commentNum;
         }
 
-        public void setCommentnum(int commentnum) {
-            this.commentnum = commentnum;
+        public void setCommentNum(int commentNum) {
+            this.commentNum = commentNum;
         }
 
-        public int getLikenum() {
-            return likenum;
+        public int getLikeNum() {
+            return likeNum;
         }
 
-        public void setLikenum(int likenum) {
-            this.likenum = likenum;
+        public void setLikeNum(int likeNum) {
+            this.likeNum = likeNum;
         }
 
-        public int getCollectnum() {
-            return collectnum;
+        public int getCollectNum() {
+            return commentNum;
         }
 
-        public void setCollectnum(int collectnum) {
-            this.collectnum = collectnum;
+        public void setCollectNum(int collectNum) {
+            this.commentNum = collectNum;
         }
 
         public boolean isFlagLike() {
@@ -172,5 +172,5 @@ public class VideoEntity implements Serializable {
         public void setFlagCollect(boolean flagCollect) {
             this.flagCollect = flagCollect;
         }
-    }
+//    }
 }

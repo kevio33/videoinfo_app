@@ -16,7 +16,8 @@
         tools:targetApi="31">
         <activity
             android:name=".Activitys.Home.HomePageActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize" />/>
         <activity
             android:name=".Activitys.Register.RegisterActivity"
             android:exported="false" />

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -83,11 +82,11 @@ public class VideoFragAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         myViewHolder.title.setText(videoEntity.getVtitle());
         myViewHolder.author.setText(videoEntity.getAuthor());
 
-        if (videoEntity.getVideoSocialEntity() != null) {
-            myViewHolder.collect.setText(""+videoEntity.getVideoSocialEntity().getCollectnum());
-            myViewHolder.dz.setText(""+videoEntity.getVideoSocialEntity().getLikenum());
-            myViewHolder.comment.setText(""+videoEntity.getVideoSocialEntity().getCommentnum());
-        }
+//        if (videoEntity.getVideoSocialEntity() != null) {
+            myViewHolder.collect.setText(""+videoEntity.getCollectNum());
+            myViewHolder.dz.setText(""+videoEntity.getLikeNum());
+                myViewHolder.comment.setText(""+videoEntity.getCommentNum());
+//        }
 
         myViewHolder.position = position;
 
