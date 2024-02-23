@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Gainsboro">#DCDCDC</color>
+
+    <color name="skin_text_white">#ffffff</color>
+    <color name="skin_topbar_bg_color">#344261</color>
 </resources>
